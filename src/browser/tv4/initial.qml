@@ -15,20 +15,16 @@ ListView {
     model: XmlListModel {
         onStatusChanged: list.statusChanged(status)
 
-        source: "tidy://www.tv4play.se/alla_program"
-        query: "//ul/li[h3[@class=\"video-title\"]]"
+        source: "tidy://www.tv4play.se/program?per_page=999&per_row=4&page=1&content-type=a-o&is_premium=false"
+        query: "//ul[@class=\"a-o-list js-show-more-content\"]/li/ul/li/a"
 
         XmlRole {
             name: "text"
-            query: "h3/a/string()"
+            query: "string()"
         }
         XmlRole {
             name: "link"
-            query: "h3/a/@href/string()"
-        }
-        XmlRole {
-            name: "description"
-            query: "div/p[@class=\"video-description\"]/string()"
+            query: "@href/string()"
         }
     }
     delegate: ListItem {

@@ -2,3 +2,4 @@ Makefile
 *.o
 *.pro.user
 addon_viewer/addonviewer
+*.tar.gz

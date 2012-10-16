@@ -14,17 +14,24 @@ Item {
 
     XmlListModel {
         id: programModel
-        query: "//form[@class=\"search-state-form\"]"
+        query: "//a[@class=\"js-show-more btn secondary full\"]"
 
         onStatusChanged: {
             if (status === XmlListModel.Ready) {
-                episodesList.model.source = "tidy://www.tv4play.se/search?order=desc&amp;rows=1000&amp;sorttype=date&amp;video_types=programs&amp;categoryids=" + get(0).categoryId;
+                try {
+                    episodesList.model.source = "tidy://www.tv4play.se" + decodeURIComponent(get(0).link) + "&page=0&per_page=999";
+                } catch (err) {
+                    if (err.name === 'TypeError')
+                        episodesList.model.source = programModel.source;
+                    else
+                        throw err;
+                }
             }
         }
 
         XmlRole {
-            name: "categoryId"
-            query: "input[@name=\"categoryids\"]/@value/string()"
+            name: "link"
+            query: "@data-more-from/string()"
         }
     }
     ListView {
@@ -39,11 +46,11 @@ Item {
         model: XmlListModel {
             onStatusChanged: list.statusChanged(status)
 
-            query: "//li[starts-with(@class, \"video-panel clip\") and not(descendant::p[@class='premium'])]"
+            query: "//div[@class=\"js-search-page\"]//li[not(descendant::p[starts-with(@class, 'requires-authorization')])]"
 
             XmlRole {
                 name: "text"
-                query: "div/h3[@class=\"video-title\"]/a/string()"
+                query: "div/h3/string()"
             }
             XmlRole {
                 name: "link"
@@ -77,7 +84,7 @@ Item {
             text: model.text.slim() + "<br/>" + model.date
 
             onClicked: {
-                mainWindow.getStreams( model.link,
+                mainWindow.getStreams( "http://tv4play.se" + model.link,
                                       { title: model.text.slim(),
                                         name: list.programName,
                                         time: model.date} );
