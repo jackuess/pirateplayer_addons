@@ -1,5 +1,5 @@
 Makefile
 *.o
-*.pro.user
+*.pro.user*
 addon_viewer/addonviewer
 *.tar.gz

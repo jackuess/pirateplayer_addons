@@ -15,21 +15,22 @@ ListView {
     spacing: 0
     model: XmlListModel {
         id: programModel
-        query: '//div[@class=\"playBoxBody svtTab-1 svtTab-Active\"]//a[@class="playLink playFloatLeft playBox-Padded"]';
+        query: '//div[@data-tabname="episodes"]//article'
 
         onStatusChanged: svtProgram.statusChanged(programModel.status)
 
         XmlRole {
             name: "text"
-            query: "div/header/h5/string()"
+            //query: "div/header/h5/string()"
+            query: "@data-title/string()"
         }
         XmlRole {
             name: "link"
-            query: "@href/string()"
+            query: "div/a[1]/@href/string()"
         }
         XmlRole {
             name: "thumb"
-            query: "div/span/img/@src/string()"
+            query: "div//img/@src/string()"
         }
     }
     delegate: ListItem {
