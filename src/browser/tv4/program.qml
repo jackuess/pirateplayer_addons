@@ -14,7 +14,7 @@ Item {
 
     XmlListModel {
         id: programModel
-        query: "//a[@class=\"js-show-more btn secondary full\"]"
+        query: '//section[@class="module video-module clearfix"][1]//a[@class="js-show-more btn secondary full"]'
 
         onStatusChanged: {
             if (status === XmlListModel.Ready) {
