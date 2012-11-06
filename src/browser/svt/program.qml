@@ -47,7 +47,7 @@ ListView {
         onClicked: {
 			mainWindow.getStreams( "http://svtplay.se" + model.link,
 								  { title: model.text,
-						 			name: svtProgram.programName } );
+                                    name: svtProgram.programName } );
         }
     }
 }
