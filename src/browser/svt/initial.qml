@@ -40,7 +40,7 @@ ListView {
             var newFactory = {
                 loader: currentView,
                 url: "tidy://www.svtplay.se" + model.link,
-                name: model.text,
+                name: model.text.slim(),
                 source: "program.qml",
                 callback: function () {
                     this.loader.source = this.source;
