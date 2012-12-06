@@ -15,7 +15,7 @@ ListView {
     model: XmlListModel {
         id: indexModel
         source: "tidy://www.svtplay.se/program"
-        query: "//li[@class=\"playListItem\"]/a"
+        query: "//a[@class=\"playAlphabeticLetterLink\"]"
 
         onStatusChanged: list.statusChanged(indexModel.status)
 
