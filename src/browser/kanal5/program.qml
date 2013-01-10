@@ -4,16 +4,12 @@ import "../viewstack.js" as ViewStack
 import "../common.js" as Common
 import ".."
 
-ListView {
+CustomListView {
     id: list
-
-    signal statusChanged(int newStatus)
 
     property int programSeason
     property string programName
 
-    height: 1
-    onContentHeightChanged: if (contentHeight > 0) height = contentHeight
     model: XmlListModel {
         id: indexModel
 
@@ -40,17 +36,11 @@ ListView {
         }
     }
     delegate: ListItem {
-        height: 70
-        fontPixelSize: 15
-        gradient: Gradient {
-            GradientStop { position: 0.0; color: ["#444","#444"][model.index%2] }
-            GradientStop { position: 1.0; color: ["#222","#666"][model.index%2] }
-        }
         imgSource: model.thumb
         text: "<strong>" + model.title.slim() + "</strong><br/><small>" + model.description + "</small>"
 
         onClicked: {
-            mainWindow.getStreams( "http://kanal5play.se" + model.link,
+            ViewStack.piratePlay( "http://kanal5play.se" + model.link,
                                   { title: model.title.slim(),
                                     name: list.programName,
                                     season: list.programSeason,

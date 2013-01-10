@@ -1,6 +1,7 @@
 import QtQuick 1.1
 
 import "../common.js" as Common
+import "../viewstack.js" as ViewStack
 
 import ".."
 
@@ -10,11 +11,12 @@ Item {
     signal statusChanged(int newStatus)
 
     property alias url: programModel.source
+    property alias model: programModel
     property string programName
 
     XmlListModel {
         id: programModel
-        query: '//section[@class="module video-module clearfix"][1]//a[@class="js-show-more btn secondary full"]'
+        query: "//a[@class=\"js-show-more btn secondary full\"]"
 
         onStatusChanged: {
             if (status === XmlListModel.Ready) {
@@ -34,15 +36,13 @@ Item {
             query: "@data-more-from/string()"
         }
     }
-    ListView {
+    CustomListView {
         id: episodesList
-        height: 1; width: parent.width
-        onContentHeightChanged: {
-            if (contentHeight > 0) {
-                height = contentHeight;
-                parent.height = contentHeight;
-            }
-        }
+
+        width: parent.width
+
+        onHeightChanged: list.height = height
+
         model: XmlListModel {
             onStatusChanged: list.statusChanged(status)
 
@@ -66,12 +66,6 @@ Item {
             }
         }
         delegate: ListItem {
-            height: 70
-            fontPixelSize: 15
-            gradient: Gradient {
-                GradientStop { position: 0.0; color: ["#555","#333"][model.index%2] }
-                GradientStop { position: 1.0; color: ["#111","#777"][model.index%2] }
-            }
             imgSource: {
                 var url = model.image;
                 var pairs = url.split("&amp;");
@@ -84,10 +78,10 @@ Item {
             text: model.text.slim() + "<br/>" + model.date
 
             onClicked: {
-                mainWindow.getStreams( "http://tv4play.se" + model.link,
-                                      { title: model.text.slim(),
-                                        name: list.programName,
-                                        time: model.date} );
+                ViewStack.piratePlay( "http://tv4play.se" + model.link,
+                                     { title: model.text.slim(),
+                                       name: list.programName,
+                                       time: model.date} );
             }
         }
     }

@@ -9,11 +9,7 @@ Rectangle {
         id: label
         anchors.horizontalCenter: parent.horizontalCenter
         anchors.verticalCenter: parent.verticalCenter
-        color: "#111";
-        font {
-            bold: true
-            pixelSize: 12
-        }
+        //color: "#eee";
         text: section
     }
 }

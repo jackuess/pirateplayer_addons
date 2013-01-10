@@ -4,15 +4,11 @@ import "../viewstack.js" as ViewStack
 import "../common.js" as Common
 import ".."
 
-ListView {
+CustomListView {
     id: list
-
-    signal statusChanged(int newStatus)
 
     property string programName
 
-    height: 1
-    onContentHeightChanged: if (contentHeight > 0) height = contentHeight
     model: XmlListModel {
         id: indexModel
 
@@ -30,18 +26,13 @@ ListView {
         }
     }
     delegate: ListItem {
-        height: 30
-        gradient: Gradient {
-            GradientStop { position: 0.0; color: ["#444","#444"][model.index%2] }
-            GradientStop { position: 1.0; color: ["#222","#666"][model.index%2] }
-        }
         text: model.text.slim()
 
         onClicked: {
             var newFactory = {
                 loader: currentView,
                 url: "tidy://www.kanal5play.se" + model.link,
-                source: "program.qml",
+                source: Qt.resolvedUrl("program.qml"),
                 season: parseInt(model.text.slim().replace("Säsong ", "")),
                 name: list.programName,
                 callback: function () {

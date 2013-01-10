@@ -3,27 +3,30 @@ import QtQuick 1.1
 import "common.js" as Common
 
 Rectangle {
-    id: listitem
+    id: listItem
 
     property alias text: label.text
     property alias textColor: label.color
     property alias fontBold: label.font.bold
-    property alias fontPixelSize: label.font.pixelSize
+    property alias fontPointSize: label.font.pointSize
     property alias imgSource: img.source
 
     signal clicked()
 
-    height: 25
+    height: Math.max(label.height + 20, 70)
     width: parent.width
-    color: "#222"
+    anchors.horizontalCenter: parent.horizontalCenter
+    //color: "transparent"
+    color: [Qt.rgba(0, 0, 0, 0.05),Qt.rgba(0, 0, 0, 0)][index%2]
+
     Image {
         id: img
 
+        anchors.verticalCenter: parent.verticalCenter
         anchors.right: parent.right
         anchors.rightMargin: 10
-        anchors.verticalCenter: parent.verticalCenter
-        height: parent.height - 20
-        y: 5
+        height: 50
+        y: label.height > img.height ? label.height/2 : 10
 
         fillMode: Image.PreserveAspectFit
     }
@@ -32,14 +35,26 @@ Rectangle {
         id: label
         anchors.verticalCenter: parent.verticalCenter
         anchors.left: parent.left
-        anchors.leftMargin: parent.height/5
+        anchors.leftMargin: 10
         width: parent.width - img.width - img.anchors.rightMargin - anchors.leftMargin
-        color: "#eee";
-        font.pixelSize: parent.height/2.5
+        //color: "#eee";
+        //color: "#222"
         wrapMode: Text.WordWrap
     }
+//    Rectangle {
+//        anchors.bottom: parent.bottom
+//        anchors.horizontalCenter: parent.horizontalCenter
+//        //color: "#373A3D"
+//        color: Qt.rgba(0, 0, 0, 0.2)
+//        width: parent.width - 20
+//        height: 1
+//    }
+
     MouseArea {
         anchors.fill: parent
-        onClicked: listitem.clicked()
+        onClicked: listItem.clicked()
+        onCanceled: listItem.color = "transparent"
+        onEntered: listItem.color = "#0099cc"
+        onExited: listItem.color = "transparent"
     }
 }

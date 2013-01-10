@@ -3,3 +3,4 @@ Makefile
 *.pro.user*
 addon_viewer/addonviewer
 *.tar.gz
+addon_viewer/moc*.cpp

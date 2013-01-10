@@ -4,13 +4,9 @@ import "../viewstack.js" as ViewStack
 import "../common.js" as Common
 import ".."
 
-ListView {
+CustomListView {
     id: list
 
-    signal statusChanged(int newStatus)
-
-    height: 1
-    onContentHeightChanged: if (contentHeight > 0) height = contentHeight
     model: XmlListModel {
         id: indexModel
 
@@ -33,12 +29,6 @@ ListView {
         }
     }
     delegate: ListItem {
-        height: 70
-        fontPixelSize: 20
-        gradient: Gradient {
-            GradientStop { position: 0.0; color: ["#444","#444"][model.index%2] }
-            GradientStop { position: 1.0; color: ["#222","#666"][model.index%2] }
-        }
         imgSource: model.image
         text: model.text.slim()
 
@@ -52,7 +42,6 @@ ListView {
                     this.loader.source = this.source;
                     this.loader.item.model.source = this.url;
                     this.loader.item.programName = this.name;
-                    //this.source = "kanal5/season.qml"
                 }};
             ViewStack.pushFactory(newFactory);
         }

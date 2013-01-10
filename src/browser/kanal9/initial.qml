@@ -2,17 +2,18 @@ import QtQuick 1.1
 
 import "../viewstack.js" as ViewStack
 import "../common.js" as Common
-
 import ".."
 
 CustomListView {
     id: list
 
     model: XmlListModel {
+        id: indexModel
+
         onStatusChanged: list.statusChanged(status)
 
-        source: "tidy://www.tv4play.se/program?per_page=999&per_row=4&page=1&content-type=a-o&is_premium=false"
-        query: "//ul[@class=\"a-o-list js-show-more-content\"]/li/ul/li/a"
+        source: "tidy://www.kanal9play.se/program"
+        query: '//a[@class="k5-AToZPanel-program k5-AToZPanel-channel-KANAL9" or @class="k5-AToZPanel-program k5-AToZPanel-channel-KANAL9 k5-AToZPanel-program-topical"]'
 
         XmlRole {
             name: "text"
@@ -29,13 +30,12 @@ CustomListView {
         onClicked: {
             var newFactory = {
                 loader: currentView,
-                url: "tidy://www.tv4play.se" + model.link,
-                source: Qt.resolvedUrl("program.qml"),
+                url: "tidy://www.kanal9play.se" + model.link,
+                source: Qt.resolvedUrl("season.qml"),
                 name: model.text.slim(),
                 callback: function () {
                     this.loader.source = this.source;
-                    this.loader.item.url = this.url;
-                    this.loader.item.programName = this.name;
+                    this.loader.item.model.source = this.url;
                 }};
             ViewStack.pushFactory(newFactory);
         }

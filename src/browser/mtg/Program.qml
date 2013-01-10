@@ -5,15 +5,10 @@ import "../common.js" as Common
 
 import ".."
 
-ListView {
+CustomListView {
     id: list
 
     property int number
-
-    signal statusChanged(int newStatus)
-
-    height: 1
-    onContentHeightChanged: if (contentHeight > 0) height = contentHeight
 
     model: XmlListModel {
         onStatusChanged: list.statusChanged(status)
@@ -39,16 +34,10 @@ ListView {
         }
     }
     delegate: ListItem {
-        height: 40
-        fontPixelSize: 15
         text: model.title.slim() + " avsnitt <strong>" + model.epNo + "</strong><br/>" + model.time
-        gradient: Gradient {
-            GradientStop { position: 0.0; color: ["#555","#333"][model.index%2] }
-            GradientStop { position: 1.0; color: ["#111","#777"][model.index%2] }
-        }
 
         onClicked: {
-            mainWindow.getStreams( "http://www.tv" + number + "play.se" + model.link,
+            ViewStack.piratePlay( "http://www.tv" + number + "play.se" + model.link,
                                   { title: model.epNo,
                                     name: model.title.slim(),
                                     time: model.time} );
