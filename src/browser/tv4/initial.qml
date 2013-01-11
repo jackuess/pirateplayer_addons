@@ -29,7 +29,7 @@ CustomListView {
         onClicked: {
             var newFactory = {
                 loader: currentView,
-                url: "tidy://www.tv4play.se" + model.link,
+                url: "tidy://www.tv4play.se" + decodeURIComponent(model.link),
                 source: Qt.resolvedUrl("program.qml"),
                 name: model.text.slim(),
                 callback: function () {

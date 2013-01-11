@@ -11,20 +11,20 @@ Item {
     signal statusChanged(int newStatus)
 
     property alias url: programModel.source
-    property alias model: programModel
+    property alias model: episodesList.model
     property string programName
 
     XmlListModel {
         id: programModel
-        query: "//a[@class=\"js-show-more btn secondary full\"]"
+        query: "//a[@class=\"js-show-more btn secondary full\" and contains(@data-more-from, 'type=video')]"
 
         onStatusChanged: {
             if (status === XmlListModel.Ready) {
                 try {
-                    episodesList.model.source = "tidy://www.tv4play.se" + decodeURIComponent(get(0).link) + "&page=0&per_page=999";
+                    episodesList.model.source = "tidy://www.tv4play.se" + decodeURIComponent(get(0).link) + "&page=0&per_page=400";
                 } catch (err) {
                     if (err.name === 'TypeError')
-                        episodesList.model.source = programModel.source;
+                        episodesList.model.source = decodeURIComponent(programModel.source);
                     else
                         throw err;
                 }
@@ -44,7 +44,10 @@ Item {
         onHeightChanged: list.height = height
 
         model: XmlListModel {
-            onStatusChanged: list.statusChanged(status)
+            onStatusChanged: {
+                if (source != "")
+                    list.statusChanged(status);
+            }
 
             query: "//div[@class=\"js-search-page\"]//li[not(descendant::p[starts-with(@class, 'requires-authorization')])]"
 
@@ -54,7 +57,7 @@ Item {
             }
             XmlRole {
                 name: "link"
-                query: "div/h3[@class=\"video-title\"]/a/@href/string()"
+                query: "div/h3/a/@href/string()"
             }
             XmlRole {
                 name: "date"
