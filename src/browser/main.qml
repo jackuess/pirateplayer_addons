@@ -36,16 +36,10 @@ Rectangle {
         anchors.bottom: parent.bottom
 
         color: "transparent"
-//        gradient: Gradient {
-//                GradientStop { position: 0.0; color: "#000" }
-//                //GradientStop { position: 1.0; color: "#272C33" }
-//                GradientStop { position: 1.0; color: "#1A1D22" }
-//            }
 
         ScrollArea {
             id: scrollArea
             anchors.fill: parent
-            frame: false
             verticalScrollBar.visible: true
 
             Component.onCompleted: ViewStack.setScrollArea(scrollArea)
@@ -116,7 +110,6 @@ Rectangle {
         id: progress
         anchors.verticalCenter: parent.verticalCenter
         anchors.horizontalCenter: parent.horizontalCenter
-        //color: "#eee"
         font.pointSize: 12
         state: "Ready"
         states: [
