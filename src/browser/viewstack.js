@@ -1,6 +1,6 @@
 .pragma library
 
-var currentFactory;
+var currentFactory = {};
 var factoryStack = [];
 
 function pushFactory(newFactory) {

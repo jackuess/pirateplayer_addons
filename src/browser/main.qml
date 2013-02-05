@@ -49,7 +49,13 @@ Rectangle {
 
                 property int status: XmlListModel.Null
 
-                width: scrollArea.childrenRect.width - scrollArea.verticalScrollBar.width-10
+                width: {
+                    if (scrollArea.notNative)
+                        parent.width
+                    else
+                        scrollArea.childrenRect.width - scrollArea.verticalScrollBar.width-10
+                }
+                height: if (scrollArea.notNative) parent.height
                 source: "menu.qml"
 
                 onSourceChanged: {

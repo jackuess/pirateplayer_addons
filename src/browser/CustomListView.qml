@@ -10,8 +10,8 @@ ListView {
         progress.state = "Ready"
         if (contentHeight > 0) {
             list.statusChanged(XmlListModel.Ready)
-            height = contentHeight
-            //parent.height = contentHeight;
+            if (!scrollArea.notNative)
+                height = contentHeight
         }
     }
 }
