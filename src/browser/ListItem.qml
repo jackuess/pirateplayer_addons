@@ -53,8 +53,8 @@ Rectangle {
     MouseArea {
         anchors.fill: parent
         onClicked: listItem.clicked()
-        onCanceled: listItem.color = "transparent"
+        onCanceled: listItem.color = [Qt.rgba(0, 0, 0, 0.05),Qt.rgba(0, 0, 0, 0)][index%2]
         onEntered: listItem.color = "#0099cc"
-        onExited: listItem.color = "transparent"
+        onExited: listItem.color = [Qt.rgba(0, 0, 0, 0.05),Qt.rgba(0, 0, 0, 0)][index%2]
     }
 }
