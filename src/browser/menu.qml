@@ -12,6 +12,11 @@ CustomListView {
             logo: "http://www.svtplay.se/public/2012.54/images/svt-play-2x.png"
         }
         ListElement {
+            title: "UR-play"
+            module: "ur"
+            logo: "http://urplay.se/design/ur_play/images/urplay-logo.png"
+        }
+        ListElement {
             title: "TV3-play"
             module: "tv3"
             logo: "http://images2.wikia.nocookie.net/__cb20091126144517/logopedia/images/c/c6/TV3_logo_1990.png"
@@ -37,11 +42,11 @@ CustomListView {
             module: "tv8"
             logo: "http://www.viasat.se/sites-paytv/viasat.se/files/kanal8_play_0.png"
         }
-//        ListElement {
-//            title: "Kanal 9-play"
-//            module: "kanal9"
-//            logo: "http://www.kanal9play.se/themes/kanal9/images/logo.png"
-//        }
+        ListElement {
+            title: "Kanal 9-play"
+            module: "kanal9"
+            logo: "http://www.kanal9play.se/themes/kanal9/images/logo.png"
+        }
         ListElement {
             title: "Aftonbladet-TV"
             module: "aftonbladet"
@@ -52,6 +57,21 @@ CustomListView {
     delegate: ListItem {
         imgSource: model.logo
         text: model.title
+
+        Rectangle {
+            id: horizGradient
+            width: parent.height
+            height: parent.width
+            anchors.centerIn: parent
+            //rotation: 270
+            rotation: 270
+            z:-999
+
+            gradient: Gradient {
+                GradientStop { position: .7; color: [Qt.rgba(0, 0, 0, 0.7),Qt.rgba(0, 0, 0, .6)][index%2] }
+                GradientStop { position: 0; color: [Qt.rgba(0, 0, 0, 0.08),Qt.rgba(0, 0, 0, 0)][index%2] }
+            }
+        }
 
         onClicked: {
             ViewStack.currentFactory = {
