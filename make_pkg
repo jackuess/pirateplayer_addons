@@ -1,0 +1,10 @@
+srcdir="$(pwd)/src/$1"
+
+build () {
+	cd "${srcdir}"
+	bsdtar -cf package.tar.gz *
+	md5sum package.tar.gz
+	mv package.tar.gz ../../
+}
+
+build
