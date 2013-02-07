@@ -13,7 +13,7 @@ CustomListView {
         ListElement {
             title: "Program A-Ö"
             module: "alfabetical"
-            url: "tidy://www.svtplay.se/program"
+            url: ""
         }
         ListElement {
             title: "Rekommenderat"
@@ -24,6 +24,11 @@ CustomListView {
             title: "Senaste program"
             module: "program"
             url: "tidy://www.svtplay.se/?tab=episodes&sida=3"
+        }
+        ListElement {
+            title: "Kanaler (live)"
+            module: "live"
+            url: ""
         }
     }
 
@@ -38,7 +43,8 @@ CustomListView {
                 source: Qt.resolvedUrl(model.module + ".qml"),
                 callback: function () {
                     this.loader.source = this.source;
-                    this.loader.item.model.source = this.url;
+                    if (model.module === "program")
+                        this.loader.item.model.source = this.url;
                 }};
             ViewStack.pushFactory(newFactory);
         }
