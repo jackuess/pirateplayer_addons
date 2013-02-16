@@ -1,13 +1,11 @@
 import QtQuick 1.1
+import Components 1.0
 
-import "../viewstack.js" as ViewStack
+import "../viewbrowser.js" as ViewBrowser
 import "../common.js" as Common
-import ".."
 
-CustomListView {
+PirateListView {
     id: list
-
-    Component.onCompleted: statusChanged(XmlListModel.Ready)
 
     model: ListModel {
         ListElement {
@@ -32,21 +30,12 @@ CustomListView {
         }
     }
 
-    delegate: ListItem {
+    delegate: ListDelegate {
         text: model.title
 
         onClicked: {
-            var newFactory = {
-                loader: currentView,
-                url: model.url,
-                name: model.text,
-                source: Qt.resolvedUrl(model.module + ".qml"),
-                callback: function () {
-                    this.loader.source = this.source;
-                    if (model.module === "program")
-                        this.loader.item.model.source = this.url;
-                }};
-            ViewStack.pushFactory(newFactory);
+            ViewBrowser.currentView.state = { currentIndex: list.currentIndex };
+            ViewBrowser.loadView( Qt.resolvedUrl(model.module + ".qml"), model.module === "program" ? { url: model.url } : {} );
         }
     }
 }

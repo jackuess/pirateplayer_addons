@@ -1,17 +1,21 @@
 import QtQuick 1.1
+import Components 1.0
 
-import "../viewstack.js" as ViewStack
+import "../viewbrowser.js" as ViewBrowser
 import "../common.js" as Common
-import ".."
 
-CustomListView {
+PirateListView {
     id: svtProgram
+
+    property int status: XmlListModel.Loading
 
     Component.onCompleted: {
         var doc = new XMLHttpRequest();
         doc.onreadystatechange = function() {
-            if (doc.readyState == XMLHttpRequest.DONE)
+            if (doc.readyState == XMLHttpRequest.DONE) {
+                status = XmlListModel.Ready;
                 programModel.xml = doc.responseText.replace("<![if !(lte IE 7)]>", "").replace("<![endif]>", "");
+            }
         }
         doc.open("GET", "tidy://svtplay.se/kanaler");
         doc.send();
@@ -21,11 +25,8 @@ CustomListView {
         id: programModel
         query: '//div[@class="svtTabMenu playChannelMenu"]//li/a'
 
-        onStatusChanged: svtProgram.statusChanged(programModel.status)
-
         XmlRole {
             name: "channel"
-            //query: "@data-channel/string()"
             query: "div/img[1]/@alt/string()"
         }
         XmlRole {
@@ -42,13 +43,16 @@ CustomListView {
             query: "div/img[1]/@src/string()"
         }
     }
-    delegate: ListItem {
+
+    delegate: ListDelegate {
         text: "<strong>" + model.channel.slim() + "</strong><br /><small>" + model.title + "</small>"
         imgSource: "http://svtplay.se" + model.thumb
         onClicked: {
-            ViewStack.piratePlay( "http://svtplay.se" + model.link,
+            ViewBrowser.piratePlay( "http://svtplay.se" + model.link,
                                   { title: model.title,
                                     name: model.channel } );
         }
     }
+
+    XmlListModelStatusMessage { target: parent }
 }

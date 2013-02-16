@@ -6,11 +6,10 @@ import "../common.js" as Common
 
 AzListView {
     id: list
-
     model: XmlListModel {
-        id: indexModel
-        source: "tidy://www.svtplay.se/program"
-        query: "//li[contains(@class, \"playListItem\")]/a"
+        source: "tidy://www.tv" + ViewBrowser.currentView.args.n + "play.se/program"
+        namespaceDeclarations: "declare default element namespace 'http://www.w3.org/1999/xhtml';"
+        query: "//div[@id=\"main-content\"]//a[string()]"
 
         XmlRole {
             name: "text"
@@ -21,13 +20,14 @@ AzListView {
             query: "@href/string()"
         }
     }
-
     delegate: ListDelegate {
         text: model.text.slim()
+
         onClicked: {
             ViewBrowser.currentView.state = { currentIndex: list.currentIndex };
             ViewBrowser.loadView( Qt.resolvedUrl("program.qml"),
-                                 { url: "tidy://www.svtplay.se" + model.link + "?tab=episodes&sida=999",
+                                 { url: "tidy://www.tv" + ViewBrowser.currentView.args.n + "play.se" + model.link,
+                                     n: ViewBrowser.currentView.args.n,
                                      programName: model.text.slim() } );
         }
     }

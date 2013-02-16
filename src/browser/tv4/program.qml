@@ -1,21 +1,16 @@
 import QtQuick 1.1
+import Components 1.0
 
 import "../common.js" as Common
-import "../viewstack.js" as ViewStack
-
-import ".."
+import "../viewbrowser.js" as ViewBrowser
 
 Item {
     id: list
 
-    signal statusChanged(int newStatus)
-
-    property alias url: programModel.source
-    property alias model: episodesList.model
-    property string programName
-
     XmlListModel {
         id: programModel
+
+        source: ViewBrowser.currentView.args.url
         query: "//a[@class=\"js-show-more btn secondary full\" and contains(@data-more-from, 'type=video')]"
 
         onStatusChanged: {
@@ -36,19 +31,12 @@ Item {
             query: "@data-more-from/string()"
         }
     }
-    CustomListView {
+    PirateListView {
         id: episodesList
 
-        width: parent.width
-
-        onHeightChanged: list.height = height
+        anchors.fill: parent
 
         model: XmlListModel {
-            onStatusChanged: {
-                if (source != "")
-                    list.statusChanged(status);
-            }
-
             query: "//div[@class=\"js-search-page\"]//li[not(descendant::p[starts-with(@class, 'requires-authorization')])]"
 
             XmlRole {
@@ -68,7 +56,7 @@ Item {
                 query: "p[@class=\"video-picture\"]/a/img/@src/string()"
             }
         }
-        delegate: ListItem {
+        delegate: ListDelegate {
             imgSource: {
                 var url = model.image;
                 var pairs = url.split("&amp;");
@@ -81,11 +69,13 @@ Item {
             text: model.text.slim() + "<br/>" + model.date
 
             onClicked: {
-                ViewStack.piratePlay( "http://tv4play.se" + model.link,
+                ViewBrowser.piratePlay( "http://tv4play.se" + model.link,
                                      { title: model.text.slim(),
-                                       name: list.programName,
+                                       name: ViewBrowser.currentView.args.programName,
                                        time: model.date} );
             }
         }
     }
+
+    XmlListModelStatusMessage { target: episodesList.model }
 }

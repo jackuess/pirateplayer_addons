@@ -1,18 +1,15 @@
 import QtQuick 1.1
+import Components 1.0
 
-import "../viewstack.js" as ViewStack
+import "../viewbrowser.js" as ViewBrowser
 import "../common.js" as Common
-import ".."
 
-CustomListView {
-    id: list
-
+PirateListView {
     model: XmlListModel {
         id: indexModel
 
-        onStatusChanged: list.statusChanged(status)
-
         namespaceDeclarations: "declare default element namespace 'http://www.w3.org/1999/xhtml';"
+        source: ViewBrowser.currentView.args.url
         query: '//*[@id="abArtikelytaContainer"]/div[@class="abLinkBlock"][position() <= 2]//div[@class="abTeaser"]'
 
         XmlRole {
@@ -32,12 +29,17 @@ CustomListView {
             query: 'div//span[@class="abLink"]/a/@href/string()'
         }
     }
-    delegate: ListItem {
+    delegate: ListDelegate {
         imgSource: decodeURIComponent(model.thumb)
         text: model.title.slim() + " - <small>" + model.description.slim() + "</small>"
 
         onClicked: {
-            ViewStack.piratePlay(model.link);
+            ViewBrowser.piratePlay( model.link,
+                                 { title: model.title.slim(),
+                                     description: model.description.slim(),
+                                     name: ViewBrowser.currentView.args.programName } );
         }
     }
+
+    XmlListModelStatusMessage { target: indexModel }
 }

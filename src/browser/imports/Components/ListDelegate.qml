@@ -1,6 +1,6 @@
 import QtQuick 1.1
 
-import "common.js" as Common
+import "../../common.js" as Common
 
 Rectangle {
     id: listItem
@@ -12,11 +12,12 @@ Rectangle {
     property alias imgSource: img.source
 
     signal clicked()
+    signal entered()
 
     height: Math.max(label.height + 20, 70)
+    anchors.left: parent.left
     width: parent.width
     anchors.horizontalCenter: parent.horizontalCenter
-    //color: "transparent"
     color: [Qt.rgba(0, 0, 0, 0.05),Qt.rgba(0, 0, 0, 0)][index%2]
 
     Image {
@@ -53,8 +54,5 @@ Rectangle {
     MouseArea {
         anchors.fill: parent
         onClicked: listItem.clicked()
-        onCanceled: listItem.color = [Qt.rgba(0, 0, 0, 0.05),Qt.rgba(0, 0, 0, 0)][index%2]
-        onEntered: listItem.color = "#0099cc"
-        onExited: listItem.color = [Qt.rgba(0, 0, 0, 0.05),Qt.rgba(0, 0, 0, 0)][index%2]
     }
 }

@@ -1,20 +1,14 @@
 import QtQuick 1.1
+import Components 1.0
 
-import "../viewstack.js" as ViewStack
+import "../viewbrowser.js" as ViewBrowser
 import "../common.js" as Common
-import ".."
 
-CustomListView {
-    id: list
-
-    property int programSeason
-    property string programName
-
+PirateListView {
     model: XmlListModel {
         id: indexModel
 
-        onStatusChanged: list.statusChanged(status)
-
+        source: ViewBrowser.currentView.args.url
         query: "//section[@class=\"tv\" or @class=\"radio\"]/a"
 
         XmlRole {
@@ -35,15 +29,18 @@ CustomListView {
             query: "@href/string()"
         }
     }
-    delegate: ListItem {
+
+    delegate: ListDelegate {
         imgSource: model.thumb
         text: "<strong>" + model.title.slim() + "</strong><br/><small>" + model.description + "</small>"
 
         onClicked: {
-            ViewStack.piratePlay( "http://urplay.se" + model.link,
+            ViewBrowser.piratePlay( "http://urplay.se" + model.link,
                                   { title: model.title.slim(),
-                                    name: list.programName,
+                                    name: ViewBrowser.currentView.args.programName,
                                     description: model.description.slim() } );
         }
     }
+
+    XmlListModelStatusMessage { target: indexModel }
 }

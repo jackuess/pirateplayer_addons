@@ -19,7 +19,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     view->engine()->setNetworkAccessManagerFactory(new NetworkAccessManagerFactory);
     view->engine()->rootContext()->setContextProperty("mainWindow", this);
-    view->engine()->setImportPathList(view->engine()->importPathList() << "../src/browser/imports");
+    view->engine()->setImportPathList(view->engine()->importPathList() << "../src/" + QCoreApplication::arguments().last() + "/imports");
 
     view->setResizeMode(QDeclarativeView::SizeRootObjectToView);
     view->setStyleSheet("background-color:transparent;");

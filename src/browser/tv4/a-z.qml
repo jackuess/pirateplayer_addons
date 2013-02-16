@@ -8,9 +8,8 @@ AzListView {
     id: list
 
     model: XmlListModel {
-        id: indexModel
-        source: "tidy://www.svtplay.se/program"
-        query: "//li[contains(@class, \"playListItem\")]/a"
+        source: "tidy://www.tv4play.se/program?per_page=999&per_row=4&page=1&content-type=a-o&is_premium=false"
+        query: "//ul[@class=\"a-o-list js-show-more-content\"]/li/ul/li/a"
 
         XmlRole {
             name: "text"
@@ -21,13 +20,13 @@ AzListView {
             query: "@href/string()"
         }
     }
-
     delegate: ListDelegate {
         text: model.text.slim()
+
         onClicked: {
             ViewBrowser.currentView.state = { currentIndex: list.currentIndex };
             ViewBrowser.loadView( Qt.resolvedUrl("program.qml"),
-                                 { url: "tidy://www.svtplay.se" + model.link + "?tab=episodes&sida=999",
+                                 { url: "tidy://www.tv4play.se" + decodeURIComponent(model.link),
                                      programName: model.text.slim() } );
         }
     }

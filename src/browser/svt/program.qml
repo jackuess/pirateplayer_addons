@@ -1,22 +1,33 @@
 import QtQuick 1.1
+import Components 1.0
 
-import "../viewstack.js" as ViewStack
+import "../viewbrowser.js" as ViewBrowser
 import "../common.js" as Common
-import ".."
 
-CustomListView {
-    id: svtProgram
+PirateListView {
+    property int status: XmlListModel.Loading
 
-    property string programName
+    anchors.fill: parent
+
+    Component.onCompleted: {
+        var doc = new XMLHttpRequest();
+        doc.onreadystatechange = function() {
+            if (doc.readyState == XMLHttpRequest.DONE) {
+                status = XmlListModel.Ready;
+                programModel.xml = doc.responseText.replace("<![if !(lte IE 7)]>", "").replace("<![endif]>", "");
+            }
+        }
+        doc.open("GET", ViewBrowser.currentView.args.url);
+        doc.send();
+    }
+
     model: XmlListModel {
         id: programModel
-        query: '//div[@data-tabname="episodes" or @data-tabname="recommended"]//article'
 
-        onStatusChanged: svtProgram.statusChanged(programModel.status)
+        query: '//div[@data-tabname="episodes" or @data-tabname="recommended"]//article'
 
         XmlRole {
             name: "text"
-            //query: "div/header/h5/string()"
             query: "@data-title/string()"
         }
         XmlRole {
@@ -28,13 +39,16 @@ CustomListView {
             query: "div//img/@src/string()"
         }
     }
-    delegate: ListItem {
-        text: model.text.slim()
+
+    delegate: ListDelegate {
         imgSource: model.thumb.startsWith("http://") ? model.thumb : "http://svtplay.se" + model.thumb
+        text: model.text.slim()
         onClicked: {
-            ViewStack.piratePlay( "http://svtplay.se" + model.link,
+            ViewBrowser.piratePlay( "http://svtplay.se" + model.link,
                                   { title: model.text,
-                                    name: svtProgram.programName } );
+                                    name: ViewBrowser.currentView.args.programName } );
         }
     }
+
+    XmlListModelStatusMessage { target: parent }
 }

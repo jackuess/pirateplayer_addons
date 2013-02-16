@@ -1,18 +1,13 @@
 import QtQuick 1.1
+import Components 1.0
 
-import "../viewstack.js" as ViewStack
+import "../viewbrowser.js" as ViewBrowser
 import "../common.js" as Common
 
-import ".."
-
-CustomListView {
-    id: list
-
-    property int number
-
+PirateListView {
     model: XmlListModel {
-        onStatusChanged: list.statusChanged(status)
-
+        id: programModel
+        source: ViewBrowser.currentView.args.url
         query: "//table[@class=\"clearfix clip-list video-tree\"]//tr[descendant::th[a]]"
         namespaceDeclarations: "declare default element namespace 'http://www.w3.org/1999/xhtml';"
 
@@ -33,14 +28,17 @@ CustomListView {
             query: "th[@class=\"col1\"]/a/@href/string()"
         }
     }
-    delegate: ListItem {
+
+    delegate: ListDelegate {
         text: model.title.slim() + " avsnitt <strong>" + model.epNo + "</strong><br/>" + model.time
 
         onClicked: {
-            ViewStack.piratePlay( "http://www.tv" + number + "play.se" + model.link,
+            ViewBrowser.piratePlay( "http://www.tv" + ViewBrowser.currentView.args.n + "play.se" + model.link,
                                   { title: model.epNo,
                                     name: model.title.slim(),
                                     time: model.time} );
         }
     }
+
+    XmlListModelStatusMessage { target: programModel }
 }

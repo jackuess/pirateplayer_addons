@@ -1,0 +1,5 @@
+AlfabetListHeader 1.0 AlfabetListHeader.qml
+AzListView 1.0 AzListView.qml
+ListDelegate 1.0 ListDelegate.qml
+PirateListView 1.0 PirateListView.qml
+XmlListModelStatusMessage 1.0 XmlListModelStatusMessage.qml

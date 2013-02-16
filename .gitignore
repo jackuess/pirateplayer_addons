@@ -1,6 +1,7 @@
 Makefile
 *.o
 *.pro.user*
+*.qmlproject.user
 addon_viewer/addonviewer
 *.tar.gz
 addon_viewer/moc*.cpp

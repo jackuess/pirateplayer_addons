@@ -1,17 +1,15 @@
 import QtQuick 1.1
+import Components 1.0
 
-import "../viewstack.js" as ViewStack
+import "../viewbrowser.js" as ViewBrowser
 import "../common.js" as Common
-import ".."
 
-CustomListView {
-    id: list
-
+PirateListView {
     model: XmlListModel {
-        id: indexModel
+        id: programModel
 
-        onStatusChanged: list.statusChanged(status)
-
+        namespaceDeclarations: ViewBrowser.currentView.args.needsNSDecl ? "declare default element namespace 'http://www.w3.org/1999/xhtml';" : ""
+        source: ViewBrowser.currentView.args.url
         query: '//div[@class="k5-video-teasers-grid"]//table[not(@width)]//td//a'
 
         XmlRole {
@@ -22,22 +20,23 @@ CustomListView {
             name: "link"
             query: "@href/string()"
         }
-        XmlRole {
-            name: "programName"
-            query: 'span[@class="title"]/span[@class="program-name"]/string()'
-        }
 
         XmlRole {
             name: "thumb"
             query: "img/@src/string()"
         }
     }
-    delegate: ListItem {
+    delegate: ListDelegate {
         imgSource: model.thumb
         text: model.title.slim()
 
         onClicked: {
-            ViewStack.piratePlay("http://kanal9play.se" + model.link);
+            ViewBrowser.piratePlay( "http://kanal9play.se" + model.link,
+                                 { title: model.title,
+                                     name: ViewBrowser.currentView.args.programName,
+                                     season: ViewBrowser.currentView.args.seasonNumber } );
         }
     }
+
+    XmlListModelStatusMessage { target: programModel }
 }

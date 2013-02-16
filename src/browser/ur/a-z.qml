@@ -8,9 +8,10 @@ AzListView {
     id: list
 
     model: XmlListModel {
-        id: indexModel
-        source: "tidy://www.svtplay.se/program"
-        query: "//li[contains(@class, \"playListItem\")]/a"
+        id: azModel
+
+        source: "tidy://urplay.se/A-O"
+        query: '//*[@id="alphabet"]/ul/li/a'
 
         XmlRole {
             name: "text"
@@ -23,11 +24,13 @@ AzListView {
     }
 
     delegate: ListDelegate {
-        text: model.text.slim()
+        id: item
+        text: model.text.slim().replace(/(TV)|(Radio)$/, "")
+
         onClicked: {
             ViewBrowser.currentView.state = { currentIndex: list.currentIndex };
             ViewBrowser.loadView( Qt.resolvedUrl("program.qml"),
-                                 { url: "tidy://www.svtplay.se" + model.link + "?tab=episodes&sida=999",
+                                 { url: "tidy://www.urplay.se" + model.link,
                                      programName: model.text.slim() } );
         }
     }

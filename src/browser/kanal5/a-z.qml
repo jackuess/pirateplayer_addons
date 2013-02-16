@@ -4,37 +4,37 @@ import Components 1.0
 import "../viewbrowser.js" as ViewBrowser
 import "../common.js" as Common
 
-PirateListView {
+AzListView {
     id: list
-
-    anchors.fill: parent
 
     model: XmlListModel {
         id: indexModel
 
-        source: ViewBrowser.currentView.args.url
-        query: "//div[@class=\"season\"]"
+        source: "tidy://www.kanal5play.se/program"
+        query: "//div[@class=\"logo\" and descendant::img]"
 
         XmlRole {
             name: "text"
-            query: "h2/string()"
+            query: "a[@class=\"ajax\"]/img/@alt/string()"
+        }
+        XmlRole {
+            name: "image"
+            query: "a[@class=\"ajax\"]/img/@src/string()"
         }
         XmlRole {
             name: "link"
-            query: "div[@class=\"season-info\"]/a/@href/string()"
+            query: "a[@class=\"ajax\"]/@href/string()"
         }
     }
     delegate: ListDelegate {
+        imgSource: model.image
         text: model.text.slim()
 
         onClicked: {
             ViewBrowser.currentView.state = { currentIndex: list.currentIndex };
-            ViewBrowser.loadView( Qt.resolvedUrl("program.qml"),
+            ViewBrowser.loadView( Qt.resolvedUrl("season.qml"),
                                  { url: "tidy://www.kanal5play.se" + model.link,
-                                     season: parseInt(model.text.slim().replace("Säsong ", "")),
-                                     programName: ViewBrowser.currentView.args.programName } );
+                                     programName: model.text.slim() } );
         }
     }
-
-    XmlListModelStatusMessage { target: indexModel }
 }

@@ -1,93 +1,69 @@
 import QtQuick 1.1
+import Components 1.0
 
-import "viewstack.js" as ViewStack
+import "viewbrowser.js" as ViewBrowser
 
-CustomListView {
-    id: list
+PirateListView {
+    anchors.fill: parent
 
     model: ListModel {
         ListElement {
-            title: "SVT-play"
-            module: "svt"
+            title: "SvT-play"
+            url: "svt/initial.qml"
             logo: "http://www.svtplay.se/public/2012.54/images/svt-play-2x.png"
         }
         ListElement {
             title: "UR-play"
-            module: "ur"
+            url: "ur/a-z.qml"
             logo: "http://urplay.se/design/ur_play/images/urplay-logo.png"
         }
         ListElement {
             title: "TV3-play"
-            module: "tv3"
+            url: "mtg/a-z.qml"//"imports/Components/AzListView.qml"
             logo: "http://images2.wikia.nocookie.net/__cb20091126144517/logopedia/images/c/c6/TV3_logo_1990.png"
+            n: 3
         }
         ListElement {
             title: "TV4-play"
-            module: "tv4"
+            url: "tv4/a-z.qml"
             logo: "http://images1.wikia.nocookie.net/__cb20100305140436/logopedia/images/3/31/TV4_Play.svg"
         }
         ListElement {
-            title: "Kanal5-play"
-            module: "kanal5"
+            title: "Kanal 5-play"
+            url: "kanal5/a-z.qml"
             logo: "http://images2.wikia.nocookie.net/__cb20091126112949/logopedia/images/1/14/Kanal_5.svg"
         }
-
         ListElement {
             title: "TV6-play"
-            module: "tv6"
+            url: "mtg/a-z.qml"//"imports/Components/AzListView.qml"
             logo: "http://www.tv6play.se/themes/play/images/tv6-logo.png"
+            n: 6
         }
         ListElement {
             title: "TV8-play"
-            module: "tv8"
+            url: "mtg/a-z.qml"//"imports/Components/AzListView.qml"
             logo: "http://www.viasat.se/sites-paytv/viasat.se/files/kanal8_play_0.png"
+            n: 8
         }
         ListElement {
             title: "Kanal 9-play"
-            module: "kanal9"
+            url: "kanal9/a-z.qml"
             logo: "http://www.kanal9play.se/themes/kanal9/images/logo.png"
         }
         ListElement {
             title: "Aftonbladet-TV"
-            module: "aftonbladet"
+            url: "aftonbladet/a-z.qml"
             logo: "http://www.tv14.net/wp-content/uploads/2010/10/Aftonbladet.jpg"
         }
     }
 
-    delegate: ListItem {
-        imgSource: model.logo
+    delegate: ListDelegate {
         text: model.title
-
-        Rectangle {
-            id: horizGradient
-            width: parent.height
-            height: parent.width
-            anchors.centerIn: parent
-            //rotation: 270
-            rotation: 270
-            z:-999
-
-            gradient: Gradient {
-                GradientStop { position: .7; color: [Qt.rgba(0, 0, 0, 0.7),Qt.rgba(0, 0, 0, .6)][index%2] }
-                GradientStop { position: 0; color: [Qt.rgba(0, 0, 0, 0.08),Qt.rgba(0, 0, 0, 0)][index%2] }
-            }
-        }
-
+        imgSource: model.logo
         onClicked: {
-            ViewStack.currentFactory = {
-                view: Qt.resolvedUrl("menu.qml"),
-                loader: currentView,
-                callback: function (loader) {
-                    this.loader.source = this.view;
-                }};
-            var newFactory = {
-                source: Qt.resolvedUrl(model.module + "/initial.qml"),
-                loader: currentView,
-                callback: function () {
-                    this.loader.source = this.source;
-                }
-            };
-            ViewStack.pushFactory(newFactory);
+            var args = model.url == "mtg/a-z.qml" ? { n: model.n } : {};
+            ViewBrowser.currentView.state = { currentIndex: list.currentIndex };
+            ViewBrowser.loadView( Qt.resolvedUrl(model.url), args );
         }
     }
 }
